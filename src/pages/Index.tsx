@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Sparkles, Wand2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import logo from "@/assets/logo.png";
 
 const Index = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -68,16 +69,14 @@ const Index = () => {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <header className="text-center mb-12 space-y-4 animate-fade-in">
-          <div className="inline-flex items-center justify-center gap-3 mb-4">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-glow">
-              <Sparkles className="w-6 h-6 text-white" />
-            </div>
+          <div className="inline-flex items-center justify-center gap-4 mb-4">
+            <img src={logo} alt="Cartoon Magic Logo" className="w-16 h-16 drop-shadow-lg" />
             <h1 className="text-5xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
               Cartoon Magic
             </h1>
           </div>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Transform your photos into stunning cartoons with the power of Gemini AI
+            Transform your photos into stunning cartoons with AI - upload or capture live!
           </p>
         </header>
 
@@ -85,10 +84,10 @@ const Index = () => {
         <div className="grid md:grid-cols-2 gap-8 items-start">
           {/* Upload Section */}
           <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.1s" }}>
-            <div className="bg-card rounded-2xl p-6 shadow-lg border border-border">
+            <div className="bg-card rounded-2xl p-6 shadow-card border border-border/50">
               <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
                 <Wand2 className="w-6 h-6 text-primary" />
-                Upload Image
+                Upload or Capture
               </h2>
               <ImageUploader
                 onImageSelect={handleImageSelect}
@@ -98,7 +97,7 @@ const Index = () => {
                 <Button
                   onClick={handleCartoonify}
                   disabled={isProcessing}
-                  className="w-full mt-6 bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-white font-semibold py-6 rounded-xl shadow-glow transition-all hover:scale-[1.02]"
+                  className="w-full mt-6 bg-gradient-to-r from-primary via-secondary to-accent hover:opacity-90 text-white font-semibold py-6 rounded-xl shadow-glow transition-all hover:scale-[1.02]"
                 >
                   {isProcessing ? (
                     <>
@@ -118,7 +117,7 @@ const Index = () => {
 
           {/* Result Section */}
           <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.2s" }}>
-            <div className="bg-card rounded-2xl p-6 shadow-lg border border-border min-h-[400px] flex flex-col">
+            <div className="bg-card rounded-2xl p-6 shadow-card border border-border/50 min-h-[400px] flex flex-col">
               <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
                 <Sparkles className="w-6 h-6 text-secondary" />
                 Cartoon Result
@@ -165,7 +164,7 @@ const Index = () => {
           ].map((feature, idx) => (
             <div
               key={idx}
-              className="bg-card rounded-xl p-6 border border-border hover:border-primary transition-colors hover:shadow-glow"
+              className="bg-card rounded-xl p-6 border border-border/50 hover:border-primary transition-all hover:shadow-glow hover:scale-[1.02]"
             >
               <feature.icon className="w-8 h-8 text-primary mb-3" />
               <h3 className="font-semibold text-lg mb-2">{feature.title}</h3>
