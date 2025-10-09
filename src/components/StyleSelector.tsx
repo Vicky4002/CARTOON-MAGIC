@@ -6,7 +6,14 @@ export type CartoonStyle =
   | "anime"
   | "comic"
   | "watercolor"
-  | "sketch";
+  | "sketch"
+  | "pixar"
+  | "retro"
+  | "noir"
+  | "popart"
+  | "oil"
+  | "fantasy"
+  | "minimalist";
 
 interface StyleSelectorProps {
   selectedStyle: CartoonStyle;
@@ -39,6 +46,41 @@ const styles: { value: CartoonStyle; label: string; description: string }[] = [
     value: "sketch",
     label: "✏️ Sketch",
     description: "Hand-drawn pencil style"
+  },
+  {
+    value: "pixar",
+    label: "🎬 Pixar 3D",
+    description: "3D animated movie style"
+  },
+  {
+    value: "retro",
+    label: "📺 Retro",
+    description: "Vintage 1950s cartoon"
+  },
+  {
+    value: "noir",
+    label: "🎭 Noir",
+    description: "Black & white dramatic"
+  },
+  {
+    value: "popart",
+    label: "🌟 Pop Art",
+    description: "Warhol-style bold colors"
+  },
+  {
+    value: "oil",
+    label: "🖼️ Oil Paint",
+    description: "Classic oil painting"
+  },
+  {
+    value: "fantasy",
+    label: "🧙 Fantasy",
+    description: "Magical fantasy art"
+  },
+  {
+    value: "minimalist",
+    label: "⚡ Minimal",
+    description: "Simple clean lines"
   }
 ];
 
@@ -46,7 +88,7 @@ export const StyleSelector = ({ selectedStyle, onStyleChange, disabled }: StyleS
   return (
     <div className="space-y-3">
       <label className="text-sm font-semibold text-foreground">Choose Cartoon Style</label>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {styles.map((style) => (
           <Button
             key={style.value}
