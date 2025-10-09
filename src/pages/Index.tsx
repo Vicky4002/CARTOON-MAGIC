@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ImageUploader } from "@/components/ImageUploader";
 import { CartoonResult } from "@/components/CartoonResult";
+import { StyleSelector, CartoonStyle } from "@/components/StyleSelector";
 import { Button } from "@/components/ui/button";
 import { Sparkles, Wand2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -11,9 +12,15 @@ const Index = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [cartoonImage, setCartoonImage] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [selectedStyle, setSelectedStyle] = useState<CartoonStyle>("vibrant");
 
   const handleImageSelect = (file: File) => {
     setSelectedFile(file);
+    setCartoonImage(null);
+  };
+
+  const handleStyleChange = (style: CartoonStyle) => {
+    setSelectedStyle(style);
     setCartoonImage(null);
   };
 
@@ -31,7 +38,7 @@ const Index = () => {
 
         // Call the edge function
         const { data, error } = await supabase.functions.invoke("cartoonify-image", {
-          body: { image: base64Image },
+          body: { image: base64Image, style: selectedStyle },
         });
 
         if (error) throw error;
@@ -93,6 +100,13 @@ const Index = () => {
                 onImageSelect={handleImageSelect}
                 disabled={isProcessing}
               />
+              {selectedFile && (
+                <StyleSelector
+                  selectedStyle={selectedStyle}
+                  onStyleChange={handleStyleChange}
+                  disabled={isProcessing}
+                />
+              )}
               {selectedFile && !cartoonImage && (
                 <Button
                   onClick={handleCartoonify}

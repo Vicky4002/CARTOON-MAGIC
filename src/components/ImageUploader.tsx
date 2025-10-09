@@ -31,15 +31,21 @@ export const ImageUploader = ({ onImageSelect, disabled }: ImageUploaderProps) =
   const startWebcam = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { facingMode: 'user', width: 1280, height: 720 } 
+        video: { 
+          facingMode: 'user', 
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        } 
       });
       streamRef.current = stream;
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
+        await videoRef.current.play();
       }
       setIsWebcamActive(true);
     } catch (error) {
       console.error('Error accessing webcam:', error);
+      alert('Unable to access webcam. Please ensure you have granted camera permissions.');
     }
   };
 

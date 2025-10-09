@@ -10,7 +10,7 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { image } = await req.json();
+    const { image, style = "vibrant" } = await req.json();
 
     if (!image) {
       return new Response(
@@ -18,6 +18,17 @@ Deno.serve(async (req) => {
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+
+    // Define style-specific prompts
+    const stylePrompts: Record<string, string> = {
+      vibrant: "Transform this image into a vibrant cartoon style. Apply bold outlines, saturated colors, simplified shapes, and a playful artistic interpretation. Make it look like a hand-drawn animation or comic book illustration with enhanced colors and clear, defined edges.",
+      anime: "Transform this image into a beautiful anime/manga style. Use large expressive eyes, clean linework, soft shading, vibrant hair colors, and the characteristic Japanese animation aesthetic. Add cel-shaded lighting and smooth gradients typical of anime art.",
+      comic: "Transform this image into a dynamic comic book style. Use bold black outlines, Ben-Day dots, halftone patterns, dramatic lighting with high contrast, and vibrant primary colors. Make it look like it's from a vintage superhero comic with action-packed energy.",
+      watercolor: "Transform this image into a soft watercolor painting style. Use gentle brushstrokes, pastel colors that blend smoothly, transparent washes, organic edges, and the fluid, dreamy quality of watercolor art. Create a delicate, artistic interpretation.",
+      sketch: "Transform this image into a hand-drawn pencil sketch style. Use cross-hatching, varied line weights, shading with graphite-like strokes, and the organic, imperfect quality of pencil artwork. Make it look like a detailed artist's sketch with visible drawing marks."
+    };
+
+    const promptText = stylePrompts[style] || stylePrompts.vibrant;
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
@@ -45,7 +56,7 @@ Deno.serve(async (req) => {
             content: [
               {
                 type: "text",
-                text: "Transform this image into a vibrant cartoon style. Apply bold outlines, saturated colors, simplified shapes, and a playful artistic interpretation. Make it look like a hand-drawn animation or comic book illustration with enhanced colors and clear, defined edges.",
+                text: promptText,
               },
               {
                 type: "image_url",
