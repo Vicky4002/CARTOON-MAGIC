@@ -40,9 +40,17 @@ export const ImageUploader = ({ onImageSelect, disabled }: ImageUploaderProps) =
       streamRef.current = stream;
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
-        await videoRef.current.play();
+        videoRef.current.muted = true;
+        videoRef.current.playsInline = true;
+        try {
+          await videoRef.current.play();
+          setIsWebcamActive(true);
+        } catch (playError) {
+          console.error('Error playing video:', playError);
+          stopWebcam();
+          alert('Unable to start webcam preview. Please try again.');
+        }
       }
-      setIsWebcamActive(true);
     } catch (error) {
       console.error('Error accessing webcam:', error);
       alert('Unable to access webcam. Please ensure you have granted camera permissions.');

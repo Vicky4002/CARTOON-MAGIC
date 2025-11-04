@@ -73,28 +73,32 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-secondary/10 py-12 px-4 relative overflow-hidden">
-      {/* Animated background elements */}
+      {/* Enhanced animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }}></div>
-        <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-accent/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "2s" }}></div>
+        <div className="absolute top-20 left-10 w-96 h-96 bg-gradient-to-br from-primary/20 to-secondary/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-10 right-20 w-[500px] h-[500px] bg-gradient-to-tl from-secondary/20 to-accent/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }}></div>
+        <div className="absolute top-1/3 right-1/4 w-80 h-80 bg-gradient-to-br from-accent/15 to-primary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "2s" }}></div>
+        <div className="absolute bottom-1/3 left-1/4 w-64 h-64 bg-gradient-to-tr from-primary/10 to-secondary/15 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1.5s" }}></div>
       </div>
 
       <div className="max-w-6xl mx-auto relative z-10">
         {/* Header */}
-        <header className="text-center mb-12 space-y-4 animate-fade-in">
-          <div className="inline-flex items-center justify-center gap-4 mb-4 group">
-            <img 
-              src={logo} 
-              alt="Cartoon Magic Logo" 
-              className="w-16 h-16 drop-shadow-lg transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12" 
-            />
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent transition-all duration-300 group-hover:scale-105">
+        <header className="text-center mb-16 space-y-6 animate-fade-in">
+          <div className="inline-flex items-center justify-center gap-5 mb-6 group cursor-pointer">
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary to-secondary rounded-2xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity duration-500"></div>
+              <img 
+                src={logo} 
+                alt="Cartoon Magic Logo" 
+                className="relative w-20 h-20 drop-shadow-2xl transition-all duration-500 group-hover:scale-125 group-hover:rotate-12 group-hover:drop-shadow-[0_0_30px_rgba(168,85,247,0.6)]" 
+              />
+            </div>
+            <h1 className="text-6xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent transition-all duration-500 group-hover:scale-110 drop-shadow-lg">
               Cartoon Magic
             </h1>
           </div>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto transition-all duration-300 hover:text-foreground">
-            Transform your photos into stunning cartoons with AI - upload or capture live!
+          <p className="text-2xl text-muted-foreground max-w-3xl mx-auto transition-all duration-300 hover:text-foreground hover:scale-105 leading-relaxed">
+            Transform your photos into <span className="font-semibold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">stunning cartoons</span> with AI - upload or capture live!
           </p>
         </header>
 
@@ -102,10 +106,12 @@ const Index = () => {
         <div className="grid md:grid-cols-2 gap-8 items-start">
           {/* Upload Section */}
           <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.1s" }}>
-            <div className="bg-card rounded-2xl p-6 shadow-card border border-border/50 transition-all duration-300 hover:shadow-glow hover:border-primary/50 hover:scale-[1.01]">
-              <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 group">
-                <Wand2 className="w-6 h-6 text-primary transition-transform duration-300 group-hover:rotate-12" />
-                Upload or Capture
+            <div className="bg-card/80 backdrop-blur-xl rounded-3xl p-8 shadow-card border-2 border-border/50 transition-all duration-300 hover:shadow-glow hover:border-primary/50 hover:scale-[1.02] hover:bg-card/90">
+              <h2 className="text-3xl font-bold mb-6 flex items-center gap-3 group">
+                <div className="p-2 bg-gradient-to-br from-primary to-secondary rounded-xl group-hover:scale-110 transition-transform duration-300">
+                  <Wand2 className="w-7 h-7 text-white transition-transform duration-300 group-hover:rotate-12" />
+                </div>
+                <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Upload or Capture</span>
               </h2>
               <ImageUploader
                 onImageSelect={handleImageSelect}
@@ -142,10 +148,12 @@ const Index = () => {
 
           {/* Result Section */}
           <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.2s" }}>
-            <div className="bg-card rounded-2xl p-6 shadow-card border border-border/50 min-h-[400px] flex flex-col transition-all duration-300 hover:shadow-glow hover:border-secondary/50 hover:scale-[1.01]">
-              <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 group">
-                <Sparkles className="w-6 h-6 text-secondary transition-all duration-500 group-hover:rotate-180 group-hover:scale-125" />
-                Cartoon Result
+            <div className="bg-card/80 backdrop-blur-xl rounded-3xl p-8 shadow-card border-2 border-border/50 min-h-[500px] flex flex-col transition-all duration-300 hover:shadow-glow hover:border-secondary/50 hover:scale-[1.02] hover:bg-card/90">
+              <h2 className="text-3xl font-bold mb-6 flex items-center gap-3 group">
+                <div className="p-2 bg-gradient-to-br from-secondary to-accent rounded-xl group-hover:scale-110 transition-transform duration-300">
+                  <Sparkles className="w-7 h-7 text-white transition-all duration-500 group-hover:rotate-180" />
+                </div>
+                <span className="bg-gradient-to-r from-secondary to-accent bg-clip-text text-transparent">Cartoon Result</span>
               </h2>
               {cartoonImage ? (
                 <CartoonResult
@@ -169,7 +177,7 @@ const Index = () => {
         </div>
 
         {/* Features */}
-        <div className="mt-16 grid md:grid-cols-3 gap-6 animate-fade-in" style={{ animationDelay: "0.3s" }}>
+        <div className="mt-20 grid md:grid-cols-3 gap-8 animate-fade-in" style={{ animationDelay: "0.3s" }}>
           {[
             {
               icon: Sparkles,
@@ -189,11 +197,16 @@ const Index = () => {
           ].map((feature, idx) => (
             <div
               key={idx}
-              className="bg-card rounded-xl p-6 border border-border/50 hover:border-primary transition-all duration-300 hover:shadow-glow hover:scale-105 cursor-pointer group active:scale-95"
+              className="relative bg-card/70 backdrop-blur-lg rounded-2xl p-8 border-2 border-border/50 hover:border-primary transition-all duration-300 hover:shadow-glow hover:scale-105 cursor-pointer group active:scale-95 overflow-hidden"
             >
-              <feature.icon className="w-8 h-8 text-primary mb-3 transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110" />
-              <h3 className="font-semibold text-lg mb-2 transition-colors duration-300 group-hover:text-primary">{feature.title}</h3>
-              <p className="text-sm text-muted-foreground transition-colors duration-300 group-hover:text-foreground">{feature.description}</p>
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative z-10">
+                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-4 transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110 shadow-lg">
+                  <feature.icon className="w-7 h-7 text-white" />
+                </div>
+                <h3 className="font-bold text-xl mb-3 transition-colors duration-300 group-hover:text-primary">{feature.title}</h3>
+                <p className="text-muted-foreground transition-colors duration-300 group-hover:text-foreground leading-relaxed">{feature.description}</p>
+              </div>
             </div>
           ))}
         </div>
