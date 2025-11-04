@@ -72,17 +72,28 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-secondary/10 py-12 px-4">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-secondary/10 py-12 px-4 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }}></div>
+        <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-accent/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "2s" }}></div>
+      </div>
+
+      <div className="max-w-6xl mx-auto relative z-10">
         {/* Header */}
         <header className="text-center mb-12 space-y-4 animate-fade-in">
-          <div className="inline-flex items-center justify-center gap-4 mb-4">
-            <img src={logo} alt="Cartoon Magic Logo" className="w-16 h-16 drop-shadow-lg" />
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+          <div className="inline-flex items-center justify-center gap-4 mb-4 group">
+            <img 
+              src={logo} 
+              alt="Cartoon Magic Logo" 
+              className="w-16 h-16 drop-shadow-lg transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12" 
+            />
+            <h1 className="text-5xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent transition-all duration-300 group-hover:scale-105">
               Cartoon Magic
             </h1>
           </div>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto transition-all duration-300 hover:text-foreground">
             Transform your photos into stunning cartoons with AI - upload or capture live!
           </p>
         </header>
@@ -91,9 +102,9 @@ const Index = () => {
         <div className="grid md:grid-cols-2 gap-8 items-start">
           {/* Upload Section */}
           <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.1s" }}>
-            <div className="bg-card rounded-2xl p-6 shadow-card border border-border/50">
-              <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                <Wand2 className="w-6 h-6 text-primary" />
+            <div className="bg-card rounded-2xl p-6 shadow-card border border-border/50 transition-all duration-300 hover:shadow-glow hover:border-primary/50 hover:scale-[1.01]">
+              <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 group">
+                <Wand2 className="w-6 h-6 text-primary transition-transform duration-300 group-hover:rotate-12" />
                 Upload or Capture
               </h2>
               <ImageUploader
@@ -111,7 +122,7 @@ const Index = () => {
                 <Button
                   onClick={handleCartoonify}
                   disabled={isProcessing}
-                  className="w-full mt-6 bg-gradient-to-r from-primary via-secondary to-accent hover:opacity-90 text-white font-semibold py-6 rounded-xl shadow-glow transition-all hover:scale-[1.02]"
+                  className="w-full mt-6 bg-gradient-to-r from-primary via-secondary to-accent hover:opacity-90 text-white font-semibold py-6 rounded-xl shadow-glow transition-all duration-300 hover:scale-105 hover:shadow-2xl active:scale-95 group"
                 >
                   {isProcessing ? (
                     <>
@@ -120,7 +131,7 @@ const Index = () => {
                     </>
                   ) : (
                     <>
-                      <Sparkles className="w-5 h-5 mr-2" />
+                      <Sparkles className="w-5 h-5 mr-2 transition-transform group-hover:rotate-180 duration-500" />
                       Cartoonify Image
                     </>
                   )}
@@ -131,9 +142,9 @@ const Index = () => {
 
           {/* Result Section */}
           <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.2s" }}>
-            <div className="bg-card rounded-2xl p-6 shadow-card border border-border/50 min-h-[400px] flex flex-col">
-              <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                <Sparkles className="w-6 h-6 text-secondary" />
+            <div className="bg-card rounded-2xl p-6 shadow-card border border-border/50 min-h-[400px] flex flex-col transition-all duration-300 hover:shadow-glow hover:border-secondary/50 hover:scale-[1.01]">
+              <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 group">
+                <Sparkles className="w-6 h-6 text-secondary transition-all duration-500 group-hover:rotate-180 group-hover:scale-125" />
                 Cartoon Result
               </h2>
               {cartoonImage ? (
@@ -143,11 +154,11 @@ const Index = () => {
                 />
               ) : (
                 <div className="flex-1 flex items-center justify-center text-center">
-                  <div className="space-y-3">
-                    <div className="w-20 h-20 mx-auto rounded-full bg-muted flex items-center justify-center">
-                      <Sparkles className="w-10 h-10 text-muted-foreground" />
+                  <div className="space-y-3 group">
+                    <div className="w-20 h-20 mx-auto rounded-full bg-muted flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:bg-primary/20 group-hover:shadow-glow">
+                      <Sparkles className="w-10 h-10 text-muted-foreground transition-all duration-500 group-hover:text-primary group-hover:rotate-180" />
                     </div>
-                    <p className="text-muted-foreground">
+                    <p className="text-muted-foreground transition-colors duration-300 group-hover:text-foreground">
                       Upload an image and click "Cartoonify" to see the magic!
                     </p>
                   </div>
@@ -178,11 +189,11 @@ const Index = () => {
           ].map((feature, idx) => (
             <div
               key={idx}
-              className="bg-card rounded-xl p-6 border border-border/50 hover:border-primary transition-all hover:shadow-glow hover:scale-[1.02]"
+              className="bg-card rounded-xl p-6 border border-border/50 hover:border-primary transition-all duration-300 hover:shadow-glow hover:scale-105 cursor-pointer group active:scale-95"
             >
-              <feature.icon className="w-8 h-8 text-primary mb-3" />
-              <h3 className="font-semibold text-lg mb-2">{feature.title}</h3>
-              <p className="text-sm text-muted-foreground">{feature.description}</p>
+              <feature.icon className="w-8 h-8 text-primary mb-3 transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110" />
+              <h3 className="font-semibold text-lg mb-2 transition-colors duration-300 group-hover:text-primary">{feature.title}</h3>
+              <p className="text-sm text-muted-foreground transition-colors duration-300 group-hover:text-foreground">{feature.description}</p>
             </div>
           ))}
         </div>
