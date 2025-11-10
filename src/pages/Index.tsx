@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ImageUploader } from "@/components/ImageUploader";
+import { ImageEditor } from "@/components/ImageEditor";
 import { CartoonResult } from "@/components/CartoonResult";
 import { StyleSelector, CartoonStyle } from "@/components/StyleSelector";
 import { Button } from "@/components/ui/button";
@@ -10,13 +11,19 @@ import logo from "@/assets/logo.png";
 
 const Index = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [adjustedFile, setAdjustedFile] = useState<File | null>(null);
   const [cartoonImage, setCartoonImage] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [selectedStyle, setSelectedStyle] = useState<CartoonStyle>("vibrant");
 
   const handleImageSelect = (file: File) => {
     setSelectedFile(file);
+    setAdjustedFile(file);
     setCartoonImage(null);
+  };
+
+  const handleImageAdjusted = (file: File) => {
+    setAdjustedFile(file);
   };
 
   const handleStyleChange = (style: CartoonStyle) => {
@@ -25,7 +32,7 @@ const Index = () => {
   };
 
   const handleCartoonify = async () => {
-    if (!selectedFile) return;
+    if (!adjustedFile) return;
 
     setIsProcessing(true);
     toast.loading("Cartoonifying your image...", { id: "cartoonify" });
@@ -50,7 +57,7 @@ const Index = () => {
           throw new Error("No cartoon image returned");
         }
       };
-      reader.readAsDataURL(selectedFile);
+      reader.readAsDataURL(adjustedFile);
     } catch (error: any) {
       console.error("Error cartoonifying image:", error);
       toast.error(error.message || "Failed to cartoonify image", { id: "cartoonify" });
@@ -117,18 +124,33 @@ const Index = () => {
                 onImageSelect={handleImageSelect}
                 disabled={isProcessing}
               />
-              {selectedFile && (
-                <StyleSelector
-                  selectedStyle={selectedStyle}
-                  onStyleChange={handleStyleChange}
-                  disabled={isProcessing}
-                />
-              )}
+            </div>
+            
+            {selectedFile && (
+              <>
+                <div className="bg-card/80 backdrop-blur-xl rounded-3xl p-8 shadow-card border-2 border-border/50 transition-all duration-300 hover:shadow-glow hover:border-primary/50">
+                  <ImageEditor
+                    imageFile={selectedFile}
+                    onImageAdjusted={handleImageAdjusted}
+                  />
+                </div>
+                
+                <div className="bg-card/80 backdrop-blur-xl rounded-3xl p-8 shadow-card border-2 border-border/50 transition-all duration-300 hover:shadow-glow hover:border-primary/50">
+                  <StyleSelector
+                    selectedStyle={selectedStyle}
+                    onStyleChange={handleStyleChange}
+                    disabled={isProcessing}
+                  />
+                </div>
+              </>
+            )}
+            
               {selectedFile && !cartoonImage && (
+              <div className="bg-card/80 backdrop-blur-xl rounded-3xl p-8 shadow-card border-2 border-border/50 transition-all duration-300 hover:shadow-glow hover:border-primary/50">
                 <Button
                   onClick={handleCartoonify}
                   disabled={isProcessing}
-                  className="w-full mt-6 bg-gradient-to-r from-primary via-secondary to-accent hover:opacity-90 text-white font-semibold py-6 rounded-xl shadow-glow transition-all duration-300 hover:scale-105 hover:shadow-2xl active:scale-95 group"
+                  className="w-full bg-gradient-to-r from-primary via-secondary to-accent hover:opacity-90 text-white font-semibold py-6 rounded-xl shadow-glow transition-all duration-300 hover:scale-105 hover:shadow-2xl active:scale-95 group"
                 >
                   {isProcessing ? (
                     <>
@@ -142,8 +164,8 @@ const Index = () => {
                     </>
                   )}
                 </Button>
+              </div>
               )}
-            </div>
           </div>
 
           {/* Result Section */}
