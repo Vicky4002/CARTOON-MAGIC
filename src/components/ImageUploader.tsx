@@ -10,9 +10,23 @@ interface ImageUploaderProps {
   disabled?: boolean;
 }
 
+type QualityPreset = 'low' | 'medium' | 'high';
+
+const QUALITY_PRESETS = {
+  low: { width: 640, height: 480 },
+  medium: { width: 1280, height: 720 },
+  high: { width: 1920, height: 1080 },
+};
+
 export const ImageUploader = ({ onImageSelect, disabled }: ImageUploaderProps) => {
   const [preview, setPreview] = useState<string | null>(null);
   const [isWebcamActive, setIsWebcamActive] = useState(false);
+  const [facingMode, setFacingMode] = useState<'user' | 'environment'>(() => {
+    return (localStorage.getItem('camera-facing') as 'user' | 'environment') || 'user';
+  });
+  const [quality, setQuality] = useState<QualityPreset>(() => {
+    return (localStorage.getItem('camera-quality') as QualityPreset) || 'medium';
+  });
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
@@ -41,11 +55,12 @@ export const ImageUploader = ({ onImageSelect, disabled }: ImageUploaderProps) =
         stopWebcam();
       }
 
+      const qualitySettings = QUALITY_PRESETS[quality];
       const constraints: MediaStreamConstraints = {
         video: {
-          facingMode: { ideal: "user" },
-          width: { ideal: 1280 },
-          height: { ideal: 720 },
+          facingMode: { ideal: facingMode },
+          width: { ideal: qualitySettings.width },
+          height: { ideal: qualitySettings.height },
         },
         audio: false,
       };
@@ -92,6 +107,25 @@ export const ImageUploader = ({ onImageSelect, disabled }: ImageUploaderProps) =
       (v as any).srcObject = null;
     }
     setIsWebcamActive(false);
+  };
+
+  const toggleCamera = () => {
+    const newMode = facingMode === 'user' ? 'environment' : 'user';
+    setFacingMode(newMode);
+    localStorage.setItem('camera-facing', newMode);
+    if (isWebcamActive) {
+      stopWebcam();
+      setTimeout(() => startWebcam(), 100);
+    }
+  };
+
+  const changeQuality = (newQuality: QualityPreset) => {
+    setQuality(newQuality);
+    localStorage.setItem('camera-quality', newQuality);
+    if (isWebcamActive) {
+      stopWebcam();
+      setTimeout(() => startWebcam(), 100);
+    }
   };
 
   useEffect(() => {
@@ -145,6 +179,25 @@ export const ImageUploader = ({ onImageSelect, disabled }: ImageUploaderProps) =
             onClick={() => videoRef.current?.play()}
             className="w-full h-auto"
           />
+          <div className="absolute top-4 right-4 flex gap-2">
+            <Button
+              size="sm"
+              variant="secondary"
+              onClick={toggleCamera}
+              className="shadow-lg"
+            >
+              <Camera className="w-4 h-4" />
+            </Button>
+            <select
+              value={quality}
+              onChange={(e) => changeQuality(e.target.value as QualityPreset)}
+              className="text-sm rounded-md bg-secondary text-secondary-foreground px-3 shadow-lg border-0"
+            >
+              <option value="low">Low (640p)</option>
+              <option value="medium">Medium (720p)</option>
+              <option value="high">High (1080p)</option>
+            </select>
+          </div>
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-3">
             <Button
               onClick={capturePhoto}
