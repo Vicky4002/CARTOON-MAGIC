@@ -1,8 +1,9 @@
-import { useCallback, useState, useRef } from "react";
+import { useCallback, useState, useRef, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import { Upload, Image as ImageIcon, Camera, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
+import { toast } from "sonner";
 
 interface ImageUploaderProps {
   onImageSelect: (file: File) => void;
@@ -29,41 +30,75 @@ export const ImageUploader = ({ onImageSelect, disabled }: ImageUploaderProps) =
   }, [onImageSelect]);
 
   const startWebcam = async () => {
+    if (!("mediaDevices" in navigator) || !navigator.mediaDevices.getUserMedia) {
+      toast.error("Camera not supported in this browser.");
+      return;
+    }
+
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { 
-          facingMode: 'user', 
+      // Stop any existing stream before starting a new one
+      if (isWebcamActive) {
+        stopWebcam();
+      }
+
+      const constraints: MediaStreamConstraints = {
+        video: {
+          facingMode: { ideal: "user" },
           width: { ideal: 1280 },
-          height: { ideal: 720 }
-        } 
-      });
+          height: { ideal: 720 },
+        },
+        audio: false,
+      };
+
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
       streamRef.current = stream;
+
       if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        videoRef.current.muted = true;
-        videoRef.current.playsInline = true;
+        const v = videoRef.current;
+        v.srcObject = stream;
+        v.muted = true;
+        v.playsInline = true;
+        v.setAttribute("playsinline", "true");
+        v.setAttribute("muted", "true");
         try {
-          await videoRef.current.play();
+          await v.play();
           setIsWebcamActive(true);
         } catch (playError) {
-          console.error('Error playing video:', playError);
-          stopWebcam();
-          alert('Unable to start webcam preview. Please try again.');
+          console.error("Error playing video:", playError);
+          // Some browsers require a second user gesture
+          setIsWebcamActive(true);
+          toast.message("Tap the video to start preview", { description: "Your browser blocked autoplay. Tap once to start the camera." });
         }
       }
-    } catch (error) {
-      console.error('Error accessing webcam:', error);
-      alert('Unable to access webcam. Please ensure you have granted camera permissions.');
+    } catch (error: any) {
+      console.error("Error accessing webcam:", error);
+      let message = "Unable to access webcam.";
+      if (error?.name === "NotAllowedError") message = "Camera permission denied. Please enable permissions.";
+      if (error?.name === "NotFoundError") message = "No camera device found.";
+      if (error?.name === "NotReadableError") message = "Camera is in use by another app.";
+      toast.error(message);
     }
   };
 
   const stopWebcam = () => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop());
+    const stream = streamRef.current;
+    if (stream) {
+      stream.getTracks().forEach((track) => track.stop());
       streamRef.current = null;
+    }
+    if (videoRef.current) {
+      const v = videoRef.current;
+      try { v.pause(); } catch {}
+      (v as any).srcObject = null;
     }
     setIsWebcamActive(false);
   };
+
+  useEffect(() => {
+    return () => {
+      stopWebcam();
+    };
+  }, []);
 
   const capturePhoto = () => {
     if (videoRef.current) {
@@ -106,6 +141,8 @@ export const ImageUploader = ({ onImageSelect, disabled }: ImageUploaderProps) =
             ref={videoRef} 
             autoPlay 
             playsInline
+            muted
+            onClick={() => videoRef.current?.play()}
             className="w-full h-auto"
           />
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-3">
